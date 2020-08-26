@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="日志切割，Nginx">
+    <meta name="keywords" content="监控，Mysql，Zabbix">
     <meta name="description" content="">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -16,7 +16,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>Nginx日志定时任务切割 | 曹贼，哪里走！</title>
+    <title>Zabbix添加自定义监控MySQL | 曹贼，哪里走！</title>
     <link rel="icon" type="image/x-icon, image/vnd.microsoft.icon" href="/favicon.ico">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -286,12 +286,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/images/3.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/images/1.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">Nginx日志定时任务切割</h1>
+                    <h1 class="description center-align post-title">Zabbix添加自定义监控MySQL</h1>
                 </div>
             </div>
         </div>
@@ -416,8 +416,20 @@
                     
                     <div class="article-tag">
                         
+                            <a href="/tags/%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/">
+                                <span class="chip bg-color">配置文件</span>
+                            </a>
+                        
                             <a href="/tags/%E8%84%9A%E6%9C%AC/">
                                 <span class="chip bg-color">脚本</span>
+                            </a>
+                        
+                            <a href="/tags/%E7%B3%BB%E7%BB%9F%E7%8A%B6%E6%80%81/">
+                                <span class="chip bg-color">系统状态</span>
+                            </a>
+                        
+                            <a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/">
+                                <span class="chip bg-color">数据库</span>
                             </a>
                         
                     </div>
@@ -428,8 +440,8 @@
                     <div class="post-cate">
                         <i class="fas fa-bookmark fa-fw icon-category"></i>
                         
-                            <a href="/categories/Nginx/" class="post-category">
-                                Nginx
+                            <a href="/categories/Zabbix/" class="post-category">
+                                Zabbix
                             </a>
                         
                     </div>
@@ -441,7 +453,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2020-06-18
+                    2020-06-17
                 </div>
                 
 
@@ -457,40 +469,203 @@
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h1 id="Nginx日志定时任务切割"><a href="#Nginx日志定时任务切割" class="headerlink" title="Nginx日志定时任务切割"></a>Nginx日志定时任务切割</h1><h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><ol>
-<li>定时任务切割需要使用到crontab配置定时任务。</li>
-<li>切割需要编写脚本去执行</li>
-<li>操作对象为nginx日志文件，定位目录</li>
-<li>按照24小时为间隔进行分割</li>
-</ol>
-<h3 id="创建定时任务"><a href="#创建定时任务" class="headerlink" title="创建定时任务"></a>创建定时任务</h3><p>  暂定任务名为cut_nginx.sh</p>
-<pre><code>crontab -e:    编辑该用户的计时器设置
-        -l: 列出该用户的计时器设置
-        -r：删除该用户的计时器设置</code></pre>
-<pre><code>crontab -e #&lt;==开始编辑
-0 0 * * * /server/scripts/cut_nginx.sh    #&lt;==每天0点0分执行脚本</code></pre>
-<h4 id="编写脚本"><a href="#编写脚本" class="headerlink" title="编写脚本"></a>编写脚本</h4><pre><code>#/bin/bash    #&lt;==指定命令解释器
-log_path=&quot;/app/nginx/logs&quot;    #&lt;==日志文件存放路径
-log_name=&quot;access.log&quot; #&lt;==操作对象
-pid_path=&quot;/app/nginx/logs/nginx.pid&quot;    #&lt;==nginx进程pid（可以cat查看）
-mv $&#123;log_path&#125;/$&#123;log_name&#125; $&#123;log_path&#125;/access-$(date --date=&quot;LAST DAY&quot; +%Y-%m-%d).log    #&lt;==mv日志文件（即切割，这样后面的日志往哪里写呢！看下面）
-kill -USR1 `cat $&#123;pid_path&#125;`    #&lt;==kill信号，通知nginx重新开一个access.log,再往里写其它的日志。</code></pre>
-<h5 id="总结："><a href="#总结：" class="headerlink" title="总结："></a>总结：</h5><p>非正规回答</p>
-<p>脚本中cat nginx.pid，nginx.pid存放的是其主进程的pid，这条命令就是拿到了nginx主进程的pid号，</p>
-<pre><code>    在没有执行kill -USR1 `cat $&#123;pid_path&#125;`之前，即便已经对文件执行了mv命令而改变了文件名称，nginx还是会向新命名的文件” xxx.log_ 20130909”照常写入日志数据的。原因在于：linux系统中，内核是根据文件描述符来找文件的。
+                <h1 id="Zabbix添加自定义监控MySQL"><a href="#Zabbix添加自定义监控MySQL" class="headerlink" title="Zabbix添加自定义监控MySQL"></a>Zabbix添加自定义监控MySQL</h1><p>Server：centos7系统，编译安装zabbix</p>
+<p>Agent：ubuntu16.04.5，apt一键安装zabbix</p>
+<p>以下内容在Agent端的/etc/zabbix/zabbix_conf.d中可见</p>
+<pre><code class="shell"># For all the following commands HOME should be set to the directory that has .my.cnf file with password information.
 
-    文件描述符：文件描述符是linux内核为每个打开的文件命名的一个整数标识。
+# Flexible parameter to grab global variables. On the frontend side, use keys like mysql.status[Com_insert].
+# Key syntax is mysql.status[variable].
+UserParameter=mysql.status[*],echo &quot;show global status where Variable_name=&#39;$1&#39;;&quot; | HOME=/etc/zabbix mysql -N | awk &#39;&#123;print $$2&#125;&#39;
 
-    linux内核为每一个进程生成(或者说维护)一个”文件描述符表”，这个文件描述符表记录的是“此进程所打开的文件(进行标识)”。在这里的环境中，nginx就是一个运行中的进程，这个进程早就打开了一个日志文件，在文件描述符表是记录了文件的。即便日志文件的路径改变了，但是还是能够找到(根据文件描述符表可以定位)。
+# Flexible parameter to determine database or table size. On the frontend side, use keys like mysql.size[zabbix,history,data].
+# Key syntax is mysql.size[&lt;database&gt;,&lt;table&gt;,&lt;type&gt;].
+# Database may be a database name or &quot;all&quot;. Default is &quot;all&quot;.
+# Table may be a table name or &quot;all&quot;. Default is &quot;all&quot;.
+# Type may be &quot;data&quot;, &quot;index&quot;, &quot;free&quot; or &quot;both&quot;. Both is a sum of data and index. Default is &quot;both&quot;.
+# Database is mandatory if a table is specified. Type may be specified always.
+# Returns value in bytes.
+# &#39;sum&#39; on data_length or index_length alone needed when we are getting this information for whole database instead of a single table
+UserParameter=mysql.size[*],bash -c &#39;echo &quot;select sum($(case &quot;$3&quot; in both|&quot;&quot;) echo &quot;data_length+index_length&quot;;; data|index) echo &quot;$3_length&quot;;; free) echo &quot;data_free&quot;;; esac)) from information_schema.tables$([[ &quot;$1&quot; = &quot;all&quot; || ! &quot;$1&quot; ]] || echo &quot; where table_schema=\&quot;$1\&quot;&quot;)$([[ &quot;$2&quot; = &quot;all&quot; || ! &quot;$2&quot; ]] || echo &quot;and table_name=\&quot;$2\&quot;&quot;);&quot; | HOME=/etc/zabbix mysql -N&#39;
 
-    脚本中cat nginx.pid，nginx.pid存放的是其主进程的pid，这条命令就是拿到了nginx主进程的     pid号
-    kill USR1 `cat $&#123;pid_path&#125;`等同于kill -USR1 进程号
+UserParameter=mysql.ping,HOME=/etc/zabbix mysqladmin ping | grep -c alive
+UserParameter=mysql.version,mysql -V</code></pre>
+<p>“UserParameter” 语法:</p>
+<pre><code class="shell">UserParameter=&lt;key&gt;,&lt;command&gt;</code></pre>
+<p>用户自定义一个key; 为命令，该命令用来获取用户想要监控的数据,也就是key的值;</p>
+<p>定好UserParameter参数后，在为主机或者模板配置监控项的时候，在”key”中输入上面自定义的key的名字就可以了.</p>
+<p>假如我要获取Mysql Server的版本，我可以这样定义”UserParameter”:</p>
+<p>打开 Zabbix Agent安装路径下的 ../etc/zabbix_agentd.conf 配置文件，翻页到最后页面，键入如下行：</p>
+<pre><code class="shell">UserParameter=mysql.version,mysql -V</code></pre>
+<p>这里我们自定义的key名就是”mysql.version”,命令”mysql -V”用来获取Mysql 版本号,其实就是key对</p>
+<p>应的值.</p>
+<p>UserParameter参数实现的原理通俗来讲，就是我们先要熟悉Mysql命令，通过Mysql的命令获取想要的</p>
+<p>数据，然后赋值给自定义的key，最后通过Zabbix Server获取这个值通过图像等方式展示出来.</p>
+<p>agent配置文件中有如下几行，保持不变，或者按需更改都可</p>
+<pre><code class="shell">UnsafeUserParameters=0  #是否允许自定义脚本传递特殊字符作为参数，通常不用开
+Include=/etc/zabbix/zabbix_agentd.d/*.conf </code></pre>
+<p>本篇配置文件为</p>
+<pre><code class="shell">UnsafeUserParameters=1  #是否允许自定义脚本传递特殊字符作为参数，通常不用开
+Include=/etc/zabbix/zabbix_agentd.d/*.conf</code></pre>
+<p>直接编辑zabbix_agentd.conf添加自定义UserParameter，或者编辑zabbix_agentd.d/UserParameter_mysql.conf都可</p>
+<p>本文直接编辑zabbix_agentd.conf来实现自定义UserParameter</p>
+<pre><code class="shell">UnsafeUserParameters=1          #编辑这里
 
-    在linux系统中，linux是通过信号与”正在运行的进程”进行通信的。linux系统中，也很多预定义好的信号，像SIGHUP。USR1是用户自定义信号。可以理解为：进程自己定义接到这个信号该干嘛(也就是进程编写者自己确定收到这个信号干嘛还是什么都不做都行，完全交给开发人员自己决定)。而在nginx中，它自己编写了代码处理当我接到USR1信号的时候，让nginx重新打开日志文件。具体原理如下：
+### Option: UserParameter
+#       User-defined parameter to monitor. There can be several user-defined parameters.
+#       Format: UserParameter=&lt;key&gt;,&lt;shell command&gt;
+#       See &#39;zabbix_agentd&#39; directory for examples.
+#
+# Mandatory: no
+# Default:
+UserParameter=mysql.version,mysql -V       #编辑这里
+UserParameter=mysql.status[*],/etc/zabbix/chk_mysql.sh $1         #编辑这里
+UserParameter=mysql.ping,mysqladmin -uzabbix -pzabbix ping 2&gt;/dev/null| grep -c alive         #编辑这里</code></pre>
+<p>保存退出</p>
+<p>配置文件更改完毕，</p>
+<p>原理其实就是server端通过自定义的key，去获取后面的命令获取到的值，反馈给server端，去绘制各类监控图，或报警这类</p>
+<p>我们主要看上述代码第11行的内容，定义键值为mysql.status[*]，这里的*是由UnsafeUserParameters=1控制，用来让后面的</p>
+<p>$1能获取<em>中的内容，比如</em>内容为Uptime，那么整个命令就变成了/etc/zabbix/chk_mysql.sh Uptime，和我们手动执行脚本一样，</p>
+<p>得到值后，自然被server端获取到了。</p>
+<p>chk_mysql.sh脚本内容如下:</p>
+<pre><code class="shell">#!/bin/bash
+# 用户名
+MYSQL_USER=&#39;zabbix&#39;
 
-1、nginx 的主进程收到USR1信号，会重新打开日志文件(以nginx配置文件中的日志名称命名,就是配置文件中access_log项所设置的值，如果文件不存在，会自动创建一个新的文件xxx.log)。
-2、然后把日志文件的拥有者改为“工作进程(worker进程)”，目的是让worker进程就具备了对日志文件的读写权限（master和worker通常以不同用户运行，所以需要改变拥有者）。
-3、nginx主进程会关闭重名的日志文件(也就是刚才使用mv命令重命名成xxx.log_ 20130909.log的文件)，并通知工作进程使用新打开的日志文件(刚才主进程打开的文件xxx.log)。具体实现上更细化点就是，主进程把USR1信号发给worker，worker接到这个信号后，会重新打开日志文件(也就是配置文件中约定的xxx.log)</code></pre>
+# 密码
+MYSQL_PWD=&#39;zabbix&#39;
+
+# 主机地址/IP
+MYSQL_HOST=&#39;127.0.0.1&#39;
+
+# 端口
+MYSQL_PORT=&#39;3306&#39;
+
+# 数据连接
+MYSQL_CONN=&quot;/usr/bin/mysqladmin -u$&#123;MYSQL_USER&#125; -p$&#123;MYSQL_PWD&#125; -h$&#123;MYSQL_HOST&#125; -P$&#123;MYSQL_PORT&#125;&quot;
+
+# 参数是否正确
+if [ $# -ne &quot;1&quot; ];then
+echo &quot;arg error!&quot; 
+fi
+
+# 获取数据
+case $1 in
+Uptime)
+result=`$&#123;MYSQL_CONN&#125; status 2&gt;/dev/null|cut -f2 -d&quot;:&quot;|cut -f1 -d&quot;T&quot;`
+echo $result 
+;;
+Com_update)
+result=`$&#123;MYSQL_CONN&#125; extended-status 2&gt;/dev/null|grep -w &quot;Com_update&quot;|cut -d&quot;|&quot; -f3`
+echo $result 
+;;
+Slow_queries)
+result=`$&#123;MYSQL_CONN&#125; status 2&gt;/dev/null|cut -f5 -d&quot;:&quot;|cut -f1 -d&quot;O&quot;`
+echo $result 
+result=`$&#123;MYSQL_CONN&#125; extended-status 2&gt;/dev/null|grep -w &quot;Com_select&quot;|cut -d&quot;|&quot; -f3`
+echo $result 
+;;
+Com_rollback)
+result=`$&#123;MYSQL_CONN&#125; extended-status 2&gt;/dev/null|grep -w &quot;Com_rollback&quot;|cut -d&quot;|&quot; -f3`
+echo $result 
+;;
+Questions)
+result=`$&#123;MYSQL_CONN&#125; status 2&gt;/dev/null|cut -f4 -d&quot;:&quot;|cut -f1 -d&quot;S&quot;`
+echo $result 
+;;
+Com_insert)
+result=`$&#123;MYSQL_CONN&#125; extended-status 2&gt;/dev/null|grep -w &quot;Com_insert&quot;|cut -d&quot;|&quot; -f3`
+echo $result 
+;;
+Com_delete)
+result=`$&#123;MYSQL_CONN&#125; extended-status 2&gt;/dev/null|grep -w &quot;Com_delete&quot;|cut -d&quot;|&quot; -f3`
+echo $result 
+;;
+Com_commit)
+result=`$&#123;MYSQL_CONN&#125; extended-status 2&gt;/dev/null|grep -w &quot;Com_commit&quot;|cut -d&quot;|&quot; -f3`
+echo $result 
+;;
+Bytes_sent)
+result=`$&#123;MYSQL_CONN&#125; extended-status 2&gt;/dev/null|grep -w &quot;Bytes_sent&quot; |cut -d&quot;|&quot; -f3`
+echo $result 
+;;
+Bytes_received)
+result=`$&#123;MYSQL_CONN&#125; extended-status 2&gt;/dev/null|grep -w &quot;Bytes_received&quot; |cut -d&quot;|&quot; -f3`
+echo $result 
+;;
+Com_begin)
+result=`$&#123;MYSQL_CONN&#125; extended-status 2&gt;/dev/null|grep -w &quot;Com_begin&quot;|cut -d&quot;|&quot; -f3`
+echo $result 
+;;
+
+*)
+echo &quot;Usage:$0(Uptime|Com_update|Slow_queries|Com_select|Com_rollback|Questions|Com_insert|Com_delete|Com_commit|Bytes_sent|Bytes_received|Com_begin)&quot; 
+;;
+esac</code></pre>
+<p>给脚本添加可执行权限</p>
+<table>
+<thead>
+<tr>
+<th align="center">参数</th>
+<th align="center">含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">mysql.status[Com_begin]</td>
+<td align="center">MySQL每秒开始运算</td>
+</tr>
+<tr>
+<td align="center">mysql.status[Bytes_received]</td>
+<td align="center">每秒接收的MySQL字节数</td>
+</tr>
+<tr>
+<td align="center">mysql.status[Bytes_sent]</td>
+<td align="center">每秒发送的MySQL字节数</td>
+</tr>
+<tr>
+<td align="center">mysql.status[Com_commit]</td>
+<td align="center">每秒MySQL提交操作</td>
+</tr>
+<tr>
+<td align="center">mysql.status[Com_delete]</td>
+<td align="center">MySQL每秒删除操作数</td>
+</tr>
+<tr>
+<td align="center">mysql.status[Com_insert]</td>
+<td align="center">MySQL每秒插入操作数</td>
+</tr>
+<tr>
+<td align="center">mysql.status[Questions]</td>
+<td align="center">每秒MySQL查询</td>
+</tr>
+<tr>
+<td align="center">mysql.status[Com_rollback]</td>
+<td align="center">每秒MySQL回滚操作</td>
+</tr>
+<tr>
+<td align="center">mysql.status[Com_select]</td>
+<td align="center">MySQL每秒选择操作</td>
+</tr>
+<tr>
+<td align="center">mysql.status[Slow_queries]</td>
+<td align="center">MySQL慢查询</td>
+</tr>
+<tr>
+<td align="center">mysql.status[Com_update]</td>
+<td align="center">每秒MySQL更新操作</td>
+</tr>
+<tr>
+<td align="center">mysql.status[Uptime]</td>
+<td align="center">MySQL正常运行时间</td>
+</tr>
+</tbody></table>
+<p>以上都是在Agent端操作</p>
+<p>完毕后重启Agent</p>
+<p>在Zabbix服务器端测试</p>
+<pre><code class="shell">[root@localhost.localdomain 20:26 /app/zabbix-4.0.23/bin]
+# ./zabbix_get -s 192.168.3.29 -p10050 -k mysqls.status[Com_insert]
+251</code></pre>
+<p>剩下的就是配置网页端了，照着模板弄就行</p>
 
             </div>
             <hr/>
@@ -516,7 +691,7 @@ kill -USR1 `cat $&#123;pid_path&#125;`    #&lt;==kill信号，通知nginx重新�
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://coolxiaobai.top/2020/06/18/Nginx%E6%97%A5%E5%BF%97%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1%E5%88%87%E5%89%B2/">https://coolxiaobai.top/2020/06/18/Nginx%E6%97%A5%E5%BF%97%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1%E5%88%87%E5%89%B2/</a>
+                    <a href="https://coolxiaobai.top/2020/06/17/Zabbix%E6%B7%BB%E5%8A%A0%E8%87%AA%E5%AE%9A%E4%B9%89%E7%9B%91%E6%8E%A7MySQL/">https://coolxiaobai.top/2020/06/17/Zabbix%E6%B7%BB%E5%8A%A0%E8%87%AA%E5%AE%9A%E4%B9%89%E7%9B%91%E6%8E%A7MySQL/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -554,8 +729,20 @@ kill -USR1 `cat $&#123;pid_path&#125;`    #&lt;==kill信号，通知nginx重新�
                     
                         <div class="article-tag">
                             
+                                <a href="/tags/%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/">
+                                    <span class="chip bg-color">配置文件</span>
+                                </a>
+                            
                                 <a href="/tags/%E8%84%9A%E6%9C%AC/">
                                     <span class="chip bg-color">脚本</span>
+                                </a>
+                            
+                                <a href="/tags/%E7%B3%BB%E7%BB%9F%E7%8A%B6%E6%80%81/">
+                                    <span class="chip bg-color">系统状态</span>
+                                </a>
+                            
+                                <a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/">
+                                    <span class="chip bg-color">数据库</span>
                                 </a>
                             
                         </div>
@@ -726,7 +913,7 @@ kill -USR1 `cat $&#123;pid_path&#125;`    #&lt;==kill信号，通知nginx重新�
         repo: 'comments',
         owner: 'coolxiaobai',
         admin: "coolxiaobai",
-        id: '2020-06-18T09-25-00',
+        id: '2020-06-17T09-25-00',
         distractionFreeMode: false  // Facebook-like distraction free mode
     });
 
@@ -754,30 +941,30 @@ kill -USR1 `cat $&#123;pid_path&#125;`    #&lt;==kill信号，通知nginx重新�
             <div class="article-badge left-badge text-color">
                 <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/2020/07/18/Redis%E5%8D%95%E6%9C%BA%E4%B8%BB%E4%BB%8E%E4%B8%80%E9%94%AE%E5%AE%89%E8%A3%85/">
+                <a href="/2020/06/18/Nginx%E6%97%A5%E5%BF%97%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1%E5%88%87%E5%89%B2/">
                     <div class="card-image">
                         
-                        <img src="/images/0.jpg" class="responsive-img" alt="Redis单机主从一键安装">
+                        <img src="/images/3.jpg" class="responsive-img" alt="Nginx日志定时任务切割">
                         
-                        <span class="card-title">Redis单机主从一键安装</span>
+                        <span class="card-title">Nginx日志定时任务切割</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            Redis主从一键安装脚本
+                            Nginx日志切割
                         
                     </div>
                     <div class="publish-info">
                         <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2020-07-18
+                            <i class="far fa-clock fa-fw icon-date"></i>2020-06-18
                         </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/Redis/" class="post-category">
-                                    Redis
+                            <a href="/categories/Nginx/" class="post-category">
+                                    Nginx
                                 </a>
                             
                             
@@ -802,30 +989,30 @@ kill -USR1 `cat $&#123;pid_path&#125;`    #&lt;==kill信号，通知nginx重新�
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2020/06/17/Zabbix%E6%B7%BB%E5%8A%A0%E8%87%AA%E5%AE%9A%E4%B9%89%E7%9B%91%E6%8E%A7MySQL/">
+                <a href="/2020/05/29/Tcpdump%E4%B9%8BARP%E5%8D%8F%E8%AE%AE/">
                     <div class="card-image">
                         
-                        <img src="/images/1.jpg" class="responsive-img" alt="Zabbix添加自定义监控MySQL">
+                        <img src="/images/1.jpg" class="responsive-img" alt="Tcpdump之ARP协议">
                         
-                        <span class="card-title">Zabbix添加自定义监控MySQL</span>
+                        <span class="card-title">Tcpdump之ARP协议</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            zabbix添加自定义监控
+                            抓包抓到的一段信息，了解之后写出此文
                         
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2020-06-17
+                                <i class="far fa-clock fa-fw icon-date"></i>2020-05-29
                             </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/Zabbix/" class="post-category">
-                                    Zabbix
+                            <a href="/categories/%E6%8A%93%E5%8C%85/" class="post-category">
+                                    抓包
                                 </a>
                             
                             
@@ -835,20 +1022,12 @@ kill -USR1 `cat $&#123;pid_path&#125;`    #&lt;==kill信号，通知nginx重新�
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/">
-                        <span class="chip bg-color">配置文件</span>
+                    <a href="/tags/%E7%BD%91%E7%BB%9C%E5%8D%8F%E8%AE%AE/">
+                        <span class="chip bg-color">网络协议</span>
                     </a>
                     
-                    <a href="/tags/%E8%84%9A%E6%9C%AC/">
-                        <span class="chip bg-color">脚本</span>
-                    </a>
-                    
-                    <a href="/tags/%E7%B3%BB%E7%BB%9F%E7%8A%B6%E6%80%81/">
-                        <span class="chip bg-color">系统状态</span>
-                    </a>
-                    
-                    <a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/">
-                        <span class="chip bg-color">数据库</span>
+                    <a href="/tags/%E5%AE%89%E5%85%A8/">
+                        <span class="chip bg-color">安全</span>
                     </a>
                     
                 </div>
